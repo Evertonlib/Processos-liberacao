@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Processos de Liberação de Projetos Executivos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --surface: #1a1826;
+    --surface2: #231f35;
+    --accent: #f4a261;
+    --accent2: #e76f51;
+    --accent3: #457b9d;
+    --text: #fffffe;
+    --text-muted: #a7a3c0;
+    --step1: #f4a261;
+    --step2: #e76f51;
+    --step3: #457b9d;
+    --step4: #2a9d8f;
+    --step5: #9b5de5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 80px 40px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(244,162,97,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(69,123,157,0.12) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .hero-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(244,162,97,0.1);
+    border: 1px solid rgba(244,162,97,0.25);
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto 18px;
+  }
+  .hero h1 span {
+    color: var(--accent);
+  }
+  .hero-sub {
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    font-size: 15px;
+  }
+
+  /* PIPELINE */
+  .pipeline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding: 40px 20px 50px;
+    flex-wrap: wrap;
+  }
+  .pipe-step {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .pipe-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .pipe-node:focus-visible {
+    outline: 2px solid rgba(244,162,97,0.55);
+    outline-offset: 6px;
+    border-radius: 16px;
+  }
+  .pipe-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: #fff;
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .pipe-circle:hover { transform: scale(1.1); }
+  .pipe-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 72px;
+  }
+  .pipe-arrow {
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--surface2), rgba(255,255,255,0.08));
+    margin: 0 2px;
+    margin-bottom: 26px;
+    position: relative;
+  }
+  .pipe-arrow::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -3px;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 6px solid rgba(255,255,255,0.12);
+  }
+
+  /* MAIN CONTENT */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .section {
+    margin-bottom: 36px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.5s ease forwards;
+    scroll-margin-top: 24px;
+  }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.12s; }
+  .section:nth-child(3) { animation-delay: 0.18s; }
+  .section:nth-child(4) { animation-delay: 0.24s; }
+  .section:nth-child(5) { animation-delay: 0.30s; }
+  .section:nth-child(6) { animation-delay: 0.36s; }
+  .section:nth-child(7) { animation-delay: 0.42s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 26px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .step-badge {
+    min-width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: #fff;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.01em;
+  }
+  .section-meta {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .section-body {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ITEMS */
+  .item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.025);
+    transition: background 0.15s;
+  }
+  .item:hover { background: rgba(255,255,255,0.05); }
+  .item-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .item-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .item-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ALERT */
+  .alert {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: rgba(231,111,81,0.08);
+    border: 1px solid rgba(231,111,81,0.2);
+    font-size: 13.5px;
+    color: #f4c7bb;
+    line-height: 1.6;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+.info-box {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: rgba(69,123,157,0.08);
+    border: 1px solid rgba(69,123,157,0.2);
+    font-size: 13.5px;
+    color: #a8c8e0;
+    line-height: 1.6;
+  }
+
+  .info-box .email-link,
+  .info-box .email-link:visited {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .info-box .email-link:hover,
+  .info-box .email-link:focus-visible {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .example-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: monospace;
+    letter-spacing: 0.02em;
+  }
+  .example-box span {
+    color: var(--accent);
+  }
+
+  /* PRAZO */
+  .prazo-banner {
+    background: linear-gradient(135deg, rgba(42,157,143,0.12), rgba(42,157,143,0.04));
+    border: 1px solid rgba(42,157,143,0.25);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .prazo-days {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: #2a9d8f;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .prazo-info { font-size: 13px; color: var(--text-muted); }
+  .prazo-info strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+  /* TABS SECTION (Procedimentos) */
+  .tabs-header {
+    display: flex;
+    gap: 4px;
+    padding: 20px 28px 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: rgba(244,162,97,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(244,162,97,0.2);
+  }
+  .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.07); color: var(--text); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: flex; flex-direction: column; gap: 10px; }
+
+  /* USICODE GRID */
+  .aba-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .aba-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .aba-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .aba-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 30px 24px 60px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer strong { color: var(--accent); }
+
+  /* COLORS */
+  .c1 { background-color: var(--step1); }
+  .c2 { background-color: var(--step2); }
+  .c3 { background-color: var(--step3); }
+  .c4 { background-color: var(--step4); }
+  .c5 { background-color: var(--step5); }
+
+  .t1 { color: var(--step1); }
+  .t2 { color: var(--step2); }
+  .t3 { color: var(--step3); }
+  .t4 { color: var(--step4); }
+  .t5 { color: var(--step5); }
+
+  .bg1 { background: rgba(244,162,97,0.08); border-color: rgba(244,162,97,0.15); }
+  .bg2 { background: rgba(231,111,81,0.08); border-color: rgba(231,111,81,0.15); }
+  .bg3 { background: rgba(69,123,157,0.08); border-color: rgba(69,123,157,0.15); }
+  .bg4 { background: rgba(42,157,143,0.08); border-color: rgba(42,157,143,0.15); }
+  .bg5 { background: rgba(155,93,229,0.08); border-color: rgba(155,93,229,0.15); }
+
+  .meta1 { background: rgba(244,162,97,0.1); color: var(--step1); border: 1px solid rgba(244,162,97,0.2); }
+  .meta2 { background: rgba(231,111,81,0.1); color: var(--step2); border: 1px solid rgba(231,111,81,0.2); }
+  .meta3 { background: rgba(69,123,157,0.1); color: var(--step3); border: 1px solid rgba(69,123,157,0.2); }
+  .meta4 { background: rgba(42,157,143,0.1); color: var(--step4); border: 1px solid rgba(42,157,143,0.2); }
+  .meta5 { background: rgba(155,93,229,0.1); color: var(--step5); border: 1px solid rgba(155,93,229,0.2); }
+
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    margin: 4px 0;
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 50px 20px 40px; }
+    .section-header { flex-wrap: wrap; }
+    .section-meta { margin-left: 0; }
+    .pipeline { gap: 6px; }
+    .pipe-arrow { width: 18px; }
+    .aba-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Guia de Treinamento · Liberação</div>
+  <h1>Processos de <span>Liberação</span> de Projetos Executivos</h1>
+  <p class="hero-sub">Tudo que o novo colaborador precisa saber para conduzir uma liberação do início ao fim com agilidade e qualidade.</p>
+</div>
+
+<!-- PIPELINE VISUAL -->
+<div class="pipeline">
+  <div class="pipe-step">
+    <button class="pipe-node" type="button" onclick="scrollToSection('step-1')" aria-label="Ir para Etapa 1">
+      <div class="pipe-circle c1">1</div>
+      <div class="pipe-label">E-mail & Check List</div>
+    </button>
+  </div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step">
+    <button class="pipe-node" type="button" onclick="scrollToSection('step-2')" aria-label="Ir para Etapa 2">
+      <div class="pipe-circle c2">2</div>
+      <div class="pipe-label">Ajuste Inicial</div>
+    </button>
+  </div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step">
+    <button class="pipe-node" type="button" onclick="scrollToSection('step-3')" aria-label="Ir para Etapa 3">
+      <div class="pipe-circle c3">3</div>
+      <div class="pipe-label">Comparativo</div>
+    </button>
+  </div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step">
+    <button class="pipe-node" type="button" onclick="scrollToSection('step-4')" aria-label="Ir para Etapa 4">
+      <div class="pipe-circle c4">4</div>
+      <div class="pipe-label">Assinatura</div>
+    </button>
+  </div>
+  <div class="pipe-arrow"></div>
+  <div class="pipe-step">
+    <button class="pipe-node" type="button" onclick="scrollToSection('step-5')" aria-label="Ir para Etapa 5">
+      <div class="pipe-circle c5">5</div>
+      <div class="pipe-label">Reajustes</div>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- STEP 1 -->
+  <div class="section" id="step-1">
+    <div class="section-header">
+      <div class="step-badge c1">1</div>
+      <div class="section-title">E-mail & Check List</div>
+      <div class="section-meta meta1">Início do processo</div>
+    </div>
+    <div class="section-body">
+      <div class="info-box">
+        <div class="alert-icon">📅</div>
+        <div>O <strong>1º dia útil</strong> da liberação começa a contar a partir do envio do e-mail com check list e anexos de medição para <strong><a class="email-link" href="mailto:liberacao@byarabi.com.br">liberacao@byarabi.com.br</a></strong> com cópia ao seu gerente.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">✅</div>
+        <div class="item-text"><strong>Check list 100% preenchida.</strong> Assinale "X" em tudo. O que não possuir: escreva <em>"NÃO POSSUI"</em>.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">🔄</div>
+        <div class="item-text"><strong>Atualize a check list</strong> sempre que surgir ou mudar informações (ex: eletros) durante o processo e reenvie para acesso futuro do setor de montagem.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">💬</div>
+        <div class="item-text"><strong>Observações de ambiente</strong> são para detalhes pouco visíveis ou acordados com o cliente — não para informar alterações de ambiente.</div>
+      </div>
+      <div class="example-box">📧 Exemplo de assunto: <span>LIBERAÇÃO SM1432 Maria João dos Santos</span></div>
+      <div class="example-box">📦 Venda futura: <span>LIBERAÇÃO ARQUIVO VF SM432 Maria João dos Santos</span></div>
+      <div class="alert">
+        <div class="alert-icon">⚠️</div>
+        <div>Use sempre a opção <strong>"Encaminhar"</strong> do e-mail de medição — não crie um e-mail novo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="section" id="step-2">
+    <div class="section-header">
+      <div class="step-badge c2">2</div>
+      <div class="section-title">Ajuste Inicial & Conferência do Vendedor</div>
+      <div class="section-meta meta2">Alinhamento Inicial</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-icon">📨</div>
+        <div class="item-text">O liberador enviará os <strong>Promobs em anexo</strong> com descritivo das alterações relevantes ao vendedor, com cópia ao gerente.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">↩️</div>
+        <div class="item-text">O vendedor deve responder com <strong>"OK"</strong> ou com os reajustes necessários usando <em>"Responder a Todos"</em> no último e-mail da liberação.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">📝</div>
+        <div class="item-text">Em caso de alteração, enviar o <strong>Promob já ajustado + descritivo</strong> do que foi alterado. Projeto sem descritivo será devolvido.</div>
+      </div>
+      <div class="alert">
+        <div class="alert-icon">🛑</div>
+        <div>Se surgir divergência que exija mais prazo, <strong>informe o congelamento do processo</strong> para evitar cobranças recorrentes do setor ao gerenciamento. Agilidade nas respostas: prazo de 1 dia.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="section" id="step-3">
+    <div class="section-header">
+      <div class="step-badge c3">3</div>
+      <div class="section-title">Conferência / Comparativo Liberador</div>
+      <div class="section-meta meta3">Revisão final</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-icon">🖥️</div>
+        <div class="item-text">O projeto recebe os ajustes finais para implantação no <strong>USICODE</strong>, gerando o comparativo entre o projeto vendido e o projeto liberado.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">📤</div>
+        <div class="item-text">O vendedor receberá o e-mail de conferência e deverá <strong>extrair o projeto da aba PL do USICODE</strong> para conferência.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">✔️</div>
+        <div class="item-text"><strong>Projeto saudável:</strong> a liberação dará andamento sem aguardar "OK" das vendas.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">❌</div>
+        <div class="item-text"><strong>Comparativo negativo:</strong> o e-mail deverá ser esclarecido pelo vendedor.</div>
+      </div>
+      <div class="alert">
+        <div class="alert-icon">⚠️</div>
+        <div>O comparativo sai <strong>apenas com o projeto finalizado</strong>. Não aguarde o comparativo para passar ao cliente — comparativos anteriores são de responsabilidade do comercial.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="section" id="step-4">
+    <div class="section-header">
+      <div class="step-badge c4">4</div>
+      <div class="section-title">Liberação (Assinatura)</div>
+      <div class="section-meta meta4">Finalização</div>
+    </div>
+    <div class="section-body">
+      <div class="prazo-banner">
+        <div class="prazo-days">7 dias úteis</div>
+        <div class="prazo-info">
+          <strong>Prazo total do processo</strong>
+          Isenta os dias parados com o comercial. Se houver pendência financeira, o prazo conta após a liberação do financeiro.
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-icon">📋</div>
+        <div class="item-text"><strong>Documentos a assinar:</strong> Projeto Executivo e Check List. Assinatura deve ser do dono do contrato.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">✍️</div>
+        <div class="item-text"><strong>Padrão aceito:</strong> assinatura física ou digital com certificado (ex: DocuSign, Gov.br). Escaneamento e xerox <strong>não têm validade jurídica</strong>.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">📏</div>
+        <div class="item-text">Confira espaços de eletros, vãos de passagens e alturas de armários <strong>sempre com uma trena em mãos</strong>.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">🎨</div>
+        <div class="item-text">Coloque os <strong>mostruários nos padrões comprados</strong> pelo cliente na mesa durante a assinatura.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">💼</div>
+        <div class="item-text">Obrigatório no envelope: <strong>data de assinatura, nome do cliente e número do contrato</strong>. Não rasure as vias impressas.</div>
+      </div>
+      <div class="info-box">
+        <div class="alert-icon">💡</div>
+        <div>O <strong>Projeto Executivo</strong> é o documento que evita retrabalhos, mal-entendidos e custos extras. Utilize-o sempre que o cliente pedir algo fora do escopo combinado.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="section" id="step-5">
+    <div class="section-header">
+      <div class="step-badge c5">5</div>
+      <div class="section-title">Reajustes de Projeto Técnico</div>
+      <div class="section-meta meta5">Prazo: 3 dias úteis</div>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="item-icon">📎</div>
+        <div class="item-text">O vendedor envia o e-mail respondendo a liberação com o <strong>projeto liberado (aba PL do USICODE) já alterado</strong> e o descritivo da alteração no corpo do e-mail.</div>
+      </div>
+      <div class="item">
+        <div class="item-icon">🤝</div>
+        <div class="item-text">Idealmente, faça a alteração <strong>com o cliente ainda na mesa</strong> e envie o e-mail à liberação com ele acompanhando.</div>
+      </div>
+      <div class="alert">
+        <div class="alert-icon">🚫</div>
+        <div><strong>Se tem reajuste, não tem assinatura.</strong> Não envie envelope com reajustes pendentes. Arquivos de venda futura não possuem reajuste — se necessário, cancele o contrato e abra um novo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROCEDIMENTOS ESSENCIAIS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-badge" style="background: rgba(255,255,255,0.08); font-family:'Syne',sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; justify-content:center; min-width:44px; height:44px; border-radius:12px;">📌</div>
+      <div class="section-title">Procedimentos Essenciais</div>
+    </div>
+
+    <div class="tabs-header">
+      <button class="tab-btn active" type="button" data-tab="medicoes" onclick="showTab('medicoes')">Medições</button>
+      <button class="tab-btn" type="button" data-tab="usicode" onclick="showTab('usicode')">USICODE</button>
+      <button class="tab-btn" type="button" data-tab="geral" onclick="showTab('geral')">Geral</button>
+    </div>
+
+    <div class="section-body">
+
+      <!-- MEDIÇÕES -->
+      <div class="tab-content active" id="tab-medicoes">
+        <div class="alert">
+          <div class="alert-icon">🏗️</div>
+          <div>Medições com <strong>obras inacabadas serão recusadas</strong>. Aguarde a finalização da obra para dar andamento.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🔎</div>
+          <div class="item-text">Após receber a medição, <strong>confira a quantidade de ambientes</strong>, separações ou junções conforme solicitado.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🛑</div>
+          <div class="item-text">O vendedor <strong>não pode montar ambientes para uso da liberação</strong> — o Promob da liberação só é compatível com o Promob do medidor.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🔗</div>
+          <div class="item-text">Para <strong>móveis integrados em 2 ou mais ambientes</strong>, solicite ao medidor que faça a medição unificada, assim como o Promob.</div>
+        </div>
+      </div>
+
+      <!-- USICODE -->
+      <div class="tab-content" id="tab-usicode">
+        <div class="aba-grid">
+          <div class="aba-card">
+            <div class="aba-name t1">P.O.</div>
+            <div class="aba-desc">Projeto Vendido</div>
+          </div>
+          <div class="aba-card">
+            <div class="aba-name t3">P.F.</div>
+            <div class="aba-desc">Projeto do Vendedor alterado após fechamento</div>
+          </div>
+          <div class="aba-card">
+            <div class="aba-name t4">P.L.</div>
+            <div class="aba-desc">Projeto da Liberação</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-icon">📂</div>
+          <div class="item-text"><strong>Ambientes devem ser separados</strong> no USICODE e no Promob. A medição deve acompanhar a quantidade de ambientes do USICODE.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🏠</div>
+          <div class="item-text">Compra de mesmo cliente com <strong>endereços diferentes</strong>: 1 contrato por endereço.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">📄</div>
+          <div class="item-text">Compra com <strong>tipos de vendas diferentes</strong> (normal e futura): contratos distintos.</div>
+        </div>
+      </div>
+
+      <!-- GERAL -->
+      <div class="tab-content" id="tab-geral">
+        <div class="item">
+          <div class="item-icon">📦</div>
+          <div class="item-text"><strong>Complementos de projeto</strong> devem ter novo contrato no USICODE: 1 Promob só com peças + 1 Promob do projeto finalizado + nova medição.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🛠️</div>
+          <div class="item-text"><strong>Alteração pós-montagem</strong> é de atribuição do comercial. Enviar p/ ASTECS: Promob PL + Promob de peças + Promob "resultado" + PDFs explicativos (Protótipos: acionar Liberação).</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">📅</div>
+          <div class="item-text"><strong>Envelope no escritório nas segundas-feiras até as 14h.</strong> O que chegar na terça ficará para a semana seguinte.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">💡</div>
+          <div class="item-text"><strong>Pontos (elétricos, hidráulicos etc.)</strong> sem utilidade visível devem ter o uso informado — caso contrário, serão fechados.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🔧</div>
+          <div class="item-text"><strong>Itens fora da biblioteca de fábrica</strong> devem ter manual de instalação enviado junto à liberação com breve explicativo na check list.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🚫</div>
+          <div class="item-text"><strong>Pacotes de ferragens</strong> não devem ter seus componentes excluídos.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">💬</div>
+          <div class="item-text"><strong>Não faça promessas</strong> ou dê respostas antecipadas aos clientes sem antes consultar o escritório.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🛁</div>
+          <div class="item-text"><strong>Venda de móveis com aquecedores</strong>: enviar planta hidráulica do local.</div>
+        </div>
+        <div class="item">
+          <div class="item-icon">🪵</div>
+          <div class="item-text"><strong>Modulação editável</strong> sempre com rebaixo + usinagem. Fundos só removidos em balcões com pontos hidráulicos.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Dúvidas? O setor de <strong>Liberação</strong> está sempre disponível para consultas sobre viabilidades na fase de orçamento.</p>
+  <p style="margin-top:8px; font-size:12px; opacity:0.5;">Processos de Liberação de Projetos Executivos · Treinamento Jan/25</p>
+</div>
+
+<script>
+  function showTab(id) {
+    const targetId = `tab-${id}`;
+
+    document.querySelectorAll('.tab-content').forEach((el) => {
+      el.classList.toggle('active', el.id === targetId);
+    });
+
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.tab === id);
+    });
+  }
+
+  function scrollToSection(id) {
+    const section = document.getElementById(id);
+
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+</script>
+</body>
+</html>
