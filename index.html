@@ -348,31 +348,85 @@
   .prazo-info strong { color: var(--text); display: block; margin-bottom: 2px; }
 
   /* TABS SECTION (Procedimentos) */
-  .tabs-header {
+  .tabs-intro {
     display: flex;
-    gap: 4px;
+    align-items: center;
+    gap: 10px;
     padding: 20px 28px 0;
-    flex-wrap: wrap;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .tabs-intro::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(244,162,97,0.35), transparent);
+  }
+  .tabs-header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 12px 28px 0;
   }
   .tab-btn {
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 13px 10px 12px;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
-    border: none;
-    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    transition: transform 0.15s, background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+  }
+  .tab-icon { font-size: 17px; line-height: 1; }
+  .tab-count {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: none;
     color: var(--text-muted);
-    transition: all 0.15s;
+  }
+  .tab-btn:hover:not(.active) {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.26);
+    transform: translateY(-2px);
+  }
+  .tab-btn:focus-visible {
+    outline: 2px solid rgba(244,162,97,0.55);
+    outline-offset: 3px;
   }
   .tab-btn.active {
-    background: rgba(244,162,97,0.12);
+    background: linear-gradient(160deg, rgba(244,162,97,0.22), rgba(244,162,97,0.07));
+    border-color: rgba(244,162,97,0.55);
     color: var(--accent);
-    border: 1px solid rgba(244,162,97,0.2);
+    box-shadow: 0 6px 20px rgba(244,162,97,0.15);
+    transform: translateY(-1px);
   }
-  .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.07); color: var(--text); }
+  .tab-btn.active .tab-count { color: rgba(244,162,97,0.8); }
+
+  /* chama atenção para as abas não vistas até o primeiro clique */
+  @keyframes tabNudge {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(244,162,97,0); }
+    50% { box-shadow: 0 0 0 5px rgba(244,162,97,0.13); }
+  }
+  .tabs-header:not(.touched) .tab-btn:not(.active) {
+    animation: tabNudge 1.9s ease-in-out 0.8s 3;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tabs-header:not(.touched) .tab-btn:not(.active) { animation: none; }
+  }
 
   .tab-content { display: none; }
   .tab-content.active { display: flex; flex-direction: column; gap: 10px; }
@@ -450,6 +504,11 @@
     .pipeline { gap: 6px; }
     .pipe-arrow { width: 18px; }
     .aba-grid { grid-template-columns: 1fr; }
+    .tabs-intro { padding: 18px 20px 0; }
+    .tabs-header { padding: 10px 20px 0; gap: 7px; }
+    .tab-btn { font-size: 11px; padding: 11px 5px 10px; letter-spacing: 0.02em; }
+    .tab-icon { font-size: 15px; }
+    .tab-count { font-size: 9.5px; }
     .prazo-banner {
       flex-direction: column;
       align-items: flex-start;
@@ -681,10 +740,24 @@
       <div class="section-title">Procedimentos Essenciais</div>
     </div>
 
+    <div class="tabs-intro">Escolha um grupo</div>
+
     <div class="tabs-header">
-      <button class="tab-btn active" type="button" data-tab="medicoes" onclick="showTab('medicoes')">Medições</button>
-      <button class="tab-btn" type="button" data-tab="usicode" onclick="showTab('usicode')">USICODE</button>
-      <button class="tab-btn" type="button" data-tab="geral" onclick="showTab('geral')">Geral</button>
+      <button class="tab-btn active" type="button" data-tab="medicoes" onclick="showTab('medicoes')">
+        <span class="tab-icon">📐</span>
+        <span>Medições</span>
+        <span class="tab-count"></span>
+      </button>
+      <button class="tab-btn" type="button" data-tab="usicode" onclick="showTab('usicode')">
+        <span class="tab-icon">🖥️</span>
+        <span>USICODE</span>
+        <span class="tab-count"></span>
+      </button>
+      <button class="tab-btn" type="button" data-tab="geral" onclick="showTab('geral')">
+        <span class="tab-icon">📋</span>
+        <span>Geral</span>
+        <span class="tab-count"></span>
+      </button>
     </div>
 
     <div class="section-body">
@@ -801,7 +874,19 @@
     document.querySelectorAll('.tab-btn').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.tab === id);
     });
+
+    document.querySelector('.tabs-header')?.classList.add('touched');
   }
+
+  // Conta os tópicos de cada aba para mostrar no botão
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    const content = document.getElementById(`tab-${btn.dataset.tab}`);
+    const label = btn.querySelector('.tab-count');
+    if (!content || !label) return;
+
+    const total = content.querySelectorAll('.item, .alert, .info-box, .aba-card').length;
+    if (total) label.textContent = `${total} tópicos`;
+  });
 
   function scrollToSection(id) {
     const section = document.getElementById(id);
